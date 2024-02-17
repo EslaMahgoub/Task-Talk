@@ -9,27 +9,32 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import environ
 from datetime import timedelta
 from pathlib import Path
+
+env = environ.Env(
+  # set casting, default value
+  DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+environ.Env.read_env(BASE_DIR / '.env')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-mx#=k-s3(ap&-k4)^ffq1dtv6$py_gq4sm+lv12p7b#q$&bmgy'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
-CORS_ALLOW_ALL_ORIGINS = True
 AUTH_USER_MODEL = 'api.User'
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    'todos'
 ]
 
 MIDDLEWARE = [
@@ -58,6 +64,14 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_URLS_REGEX = r"^/api/.*"
+# CORS_ALLOWED_ORIGINS = []
+
+# if DEBUG:
+#   CORS_ALLOWED_ORIGINS += [
+#     'http://localhost:3000',
+#   ]
 
 TEMPLATES = [
     {
@@ -83,8 +97,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        # 'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': env('PG_NAME'),
+        'USER': env('PG_USER'),
+        'PASSWORD': env('PG_PASSWORD'),
+        'HOST': env('PG_HOST'),
+        'PORT': env('PG_PORT'),
     }
 }
 
@@ -131,13 +150,19 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
-'DEFAULT_AUTHENTICATION_CLASSES': (
+  'DEFAULT_AUTHENTICATION_CLASSES': (
+  'rest_framework.authentication.SessionAuthentication',
   'rest_framework_simplejwt.authentication.JWTAuthentication',
-)
+  ), 
+  'DEFAULT_PERMISSION_CLASSES':(
+    'rest_framework.permissions.IsAuthenticatedOrReadOnly' #GET
+  ),
+  'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+  'PAGE_SIZE': 10
 }
 
 SIMPLE_JWT = {
-'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+'ACCESS_TOKEN_LIFETIME': timedelta(minutes=50),
 'REFRESH_TOKEN_LIFETIME': timedelta(days=50),
 'ROTATE_REFRESH_TOKENS': True,
 'BLACKLIST_AFTER_ROTATION': True,

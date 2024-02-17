@@ -5,3 +5,5 @@ djangorestframework-simplejwt
 django-cors-headers
 pyjwt
 django-jazzmin
+django-environ==0.9.0
+psycopg2

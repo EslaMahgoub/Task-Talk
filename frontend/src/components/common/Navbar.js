@@ -1,8 +1,7 @@
 import { useContext } from 'react'
-import { jwtDecode } from 'jwt-decode'
 
 import { Link } from 'react-router-dom'
-import AuthContext from "../context/AuthContext"
+import AuthContext from "../../context/AuthContext"
 
 function Navbar() {
   const {user, logoutUser} = useContext(AuthContext)
@@ -16,14 +15,14 @@ function Navbar() {
           <img style={{width: "100px", height: "50px", objectFit: "contain"}} src="logo.png" alt=""/>
 
         </Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="float-end">
           <div className="collapse navbar-collapse float-end" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <Link to="/" className="nav-link active" aria-current="page">Home</Link>
+                <Link to="/" className="nav-link active">Home</Link>
               </li>
               { token === null &&
               <>
@@ -42,6 +41,9 @@ function Navbar() {
                 </li>
                 <li className="nav-item">
                   <Link to="/dashboard" className="nav-link">Dashboard</Link>
+                </li>
+                <li className="nav-item">
+                  <Link to="/todos" className="nav-link">Todo</Link>
                 </li>
                 <li className="nav-item">
                   <Link to="/login" onClick={logoutUser} style={{cursor: "pointer"}} className="nav-link">Logout</Link>
