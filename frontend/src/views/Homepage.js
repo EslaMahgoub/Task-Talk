@@ -36,7 +36,7 @@ function Homepage() {
                 Todo is designed to make your day more structured and productive, allowing you to focus on what matters most and achieve your goals with ease.
               </p>
               <p>
-                <Link className="btn btn-secondary" to="#" role="button">
+                <Link className="btn btn-secondary" to="/todos/" role="button">
                   View details »
                 </Link>
               </p>

@@ -39,7 +39,6 @@ function Dashboard() {
         setRes(response.data.response)
       }
       catch (error){
-        console.log(error);
         setRes("something went wrong")
       }
     }

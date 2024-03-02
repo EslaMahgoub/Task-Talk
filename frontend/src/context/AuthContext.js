@@ -42,6 +42,10 @@ export const AuthProvider = ({ children }) => {
       setUser(token_decoded)
       
       localStorage.setItem("authTokens", JSON.stringify(data))
+      localStorage.setItem("access", data.access)
+      localStorage.setItem("refresh", data.refresh)
+
+
       history.push("/")
       swal.fire({
         title: `Login successful, Welcome ${token_decoded.username} to TaskTalk`,
@@ -66,7 +70,7 @@ export const AuthProvider = ({ children }) => {
     }
   }
   const registerUser = async (email, username, password, password2) => {
-    const response = await fetch("http://127.0.0.1:8000/api/register/", {
+    const response = await fetch("http://localhost:8000/api/register/", {
       method: "POST",
       headers: {
           "Content-Type":"application/json"
